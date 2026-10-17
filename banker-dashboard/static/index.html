@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Banker's Algorithm Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <div class="logo">⚖</div>
+      <div>
+        <h1>Smart Resource Allocation</h1>
+        <p>Banker's Algorithm — a request is granted only if the system stays safe</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="main" role="tab">Dashboard</button>
+      <button class="tab" data-tab="tools" role="tab">Insights &amp; Tools <span id="logCount" class="count">0</span></button>
+    </nav>
+  </header>
+
+  <!-- ============ TAB 1: DASHBOARD ============ -->
+  <main id="tab-main" class="tabpanel">
+    <div class="split">
+      <!-- LEFT: system state -->
+      <section class="card">
+        <h2>System state</h2>
+        <div class="avail"><span>Available resources</span><div id="available" class="pills"></div></div>
+        <div class="tablewrap"><table id="stateTable"></table></div>
+        <p class="hint">Need = Max − Allocation. The highlighted row is the process that last made a request.</p>
+      </section>
+
+      <!-- RIGHT: status, sequence, request -->
+      <div class="stack">
+        <section id="statusCard" class="card status">
+          <div id="statusIcon" class="status-icon">…</div>
+          <div>
+            <div id="statusTitle" class="status-title">Checking…</div>
+            <div id="statusSub" class="status-sub"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Safe sequence</h2>
+          <div id="sequence" class="sequence"></div>
+        </section>
+
+        <section class="card">
+          <h2>Request resources</h2>
+          <div class="formrow">
+            <label>Process <select id="procSelect"></select></label>
+            <div class="reqwrap"><span class="lbl">Request vector</span><div id="reqInputs" class="reqinputs"></div></div>
+          </div>
+          <div class="btns">
+            <button id="sendBtn" class="primary">Send request</button>
+            <button id="resetBtn">Reset sample</button>
+          </div>
+          <div id="result" class="result hidden"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ TAB 2: INSIGHTS & TOOLS ============ -->
+  <main id="tab-tools" class="tabpanel hidden">
+    <div class="grid">
+      <section class="card">
+        <h2>Resource usage</h2>
+        <div id="bars"></div>
+      </section>
+
+      <section class="card">
+        <h2>Process readiness <small>can each process finish right now?</small></h2>
+        <div class="tablewrap"><table id="readyTable"></table></div>
+      </section>
+
+      <section class="card">
+        <h2>Decision log</h2>
+        <ul id="log" class="log"><li class="empty">No requests yet. Send one from the Dashboard tab.</li></ul>
+      </section>
+
+      <section class="card">
+        <h2>Safety check walkthrough</h2>
+        <p class="hint" style="margin-top:0">Replays the safety algorithm: Work starts as Available; each finishing process returns its Allocation.</p>
+        <button id="stepBtn">▶ Play step by step</button>
+        <ol id="steps" class="steps"></ol>
+      </section>
+
+      <section class="card">
+        <h2>Demo scenarios <small>fills the request form on the Dashboard tab</small></h2>
+        <div class="demos">
+          <button class="demo" data-p="1" data-r="1,0,2">1. Valid request<br><small>P1 [1 0 2] → granted</small></button>
+          <button class="demo" data-p="4" data-r="3,3,0">2. Not enough resources<br><small>P4 [3 3 0] → wait (after #1)</small></button>
+          <button class="demo" data-p="0" data-r="0,2,0">3. Unsafe request<br><small>P0 [0 2 0] → denied (after #1)</small></button>
+          <button class="demo" data-p="1" data-r="5,0,0">4. Exceeds max claim<br><small>P1 [5 0 0] → denied</small></button>
+        </div>
+      </section>
+
+      <section class="card wide">
+        <h2>Load custom data <small>validated — try a negative number or Allocation &gt; Max</small></h2>
+        <textarea id="customJson" rows="8" spellcheck="false"></textarea>
+        <div class="btns"><button id="loadBtn" class="primary">Load data</button><span id="loadMsg" class="msg"></span></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="foot">Hackathon 17.10.2026 · Banker's Algorithm · O(m × n²) per safety check</footer>
+  <script src="app.js"></script>
+</body>
+</html>
